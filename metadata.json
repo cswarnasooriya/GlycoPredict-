@@ -1,0 +1,5 @@
+{
+  "name": "Diabetes Risk AI Assistant",
+  "description": "A specialized AI Healthcare Assistant for Diabetes Management that analyzes patient lab data and provides predictive insights and medical advice.",
+  "requestFramePermissions": []
+}
