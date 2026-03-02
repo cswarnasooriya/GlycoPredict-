@@ -1,5 +1,5 @@
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, Timestamp, query, orderBy } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../utils/firebase';
 
 export interface TrendingTopic {
   id?: string;

@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MessageCircle, Send, X, Loader2, Brain } from 'lucide-react';
 import { GoogleGenAI } from '@google/genai';
 import { PatientRecord } from '../services/patientService';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 interface ChatMessage {
   id: string;

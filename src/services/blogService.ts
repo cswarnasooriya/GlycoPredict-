@@ -1,5 +1,5 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, query, getDocs, orderBy, Timestamp } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../utils/firebase';
 
 export interface BlogPost {
   id?: string;
@@ -15,12 +15,12 @@ export const getBlogs = async () => {
     const blogsRef = collection(db, 'blogs');
     const q = query(blogsRef, orderBy('createdAt', 'desc'));
     const querySnapshot = await getDocs(q);
-    
+
     const blogs: BlogPost[] = [];
     querySnapshot.forEach((doc) => {
       blogs.push({ id: doc.id, ...doc.data() } as BlogPost);
     });
-    
+
     return blogs;
   } catch (error) {
     console.error('Error fetching blogs:', error);

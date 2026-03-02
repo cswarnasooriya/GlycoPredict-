@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Mail, Lock, User, ShieldCheck, Loader2, AlertCircle, Activity, ArrowLeft } from 'lucide-react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { auth, db } from '../utils/firebase';
 
 interface AuthProps {
   onLoginSuccess: (role: string) => void;
@@ -72,7 +72,7 @@ export default function Auth({ onLoginSuccess, onBackToHome }: AuthProps) {
       </div>
 
       <div className="w-full max-w-md">
-        <button 
+        <button
           onClick={onBackToHome}
           className="mb-6 inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
         >
@@ -87,7 +87,7 @@ export default function Auth({ onLoginSuccess, onBackToHome }: AuthProps) {
           <p className="mt-2 text-slate-500">Secure Medical Access Portal</p>
         </div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -99,7 +99,7 @@ export default function Auth({ onLoginSuccess, onBackToHome }: AuthProps) {
             </h2>
 
             {error && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start"
@@ -217,7 +217,7 @@ export default function Auth({ onLoginSuccess, onBackToHome }: AuthProps) {
               </p>
             </div>
           </div>
-          
+
           {/* Medical Trust Footer */}
           <div className="bg-slate-50/80 border-t border-slate-100 p-4 flex justify-center items-center">
             <div className="flex items-center gap-2 text-xs font-medium text-slate-500">

@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { 
+import {
   ChevronRight,
   Loader2,
   LogOut
 } from 'lucide-react';
 import { onAuthStateChanged, User as FirebaseUser, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from './firebase';
+import { auth, db } from './utils/firebase';
 import Hero from './components/Hero';
 import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
@@ -91,10 +91,10 @@ export default function App() {
         <Navbar user={user} userRole={userRole} onNavigate={setView} onLogout={handleLogout} />
         <main className="flex-1">
           <Hero onStartAssessment={handleStartAssessment} />
-          <HomeContent 
-            userRole={userRole} 
-            onReadMoreBlog={handleReadMore} 
-            onNavigateToAdmin={handleNavigateToAdmin} 
+          <HomeContent
+            userRole={userRole}
+            onReadMoreBlog={handleReadMore}
+            onNavigateToAdmin={handleNavigateToAdmin}
           />
         </main>
         <Footer />
@@ -119,8 +119,8 @@ export default function App() {
       <div className="min-h-screen flex flex-col">
         <Navbar user={user} userRole={userRole} onNavigate={setView} onLogout={handleLogout} />
         <main className="flex-1">
-          <Auth 
-            onLoginSuccess={(role) => setView(role === 'admin' ? 'admin-dashboard' : 'dashboard')} 
+          <Auth
+            onLoginSuccess={(role) => setView(role === 'admin' ? 'admin-dashboard' : 'dashboard')}
             onBackToHome={() => setView('hero')}
           />
         </main>
@@ -135,9 +135,9 @@ export default function App() {
 
   if (view === 'dashboard') {
     return (
-      <Dashboard 
-        onNewAssessment={() => setView('assessment')} 
-        onLogout={() => setView('hero')} 
+      <Dashboard
+        onNewAssessment={() => setView('assessment')}
+        onLogout={() => setView('hero')}
         onBackToHome={() => setView('hero')}
       />
     );
@@ -146,23 +146,23 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-900">
       <Navbar user={user} userRole={userRole} onNavigate={setView} onLogout={handleLogout} />
-      
+
       <main className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="max-w-4xl mx-auto"
         >
           <div className="flex justify-between items-center mb-8">
-            <button 
+            <button
               onClick={() => setView(userRole === 'admin' ? 'admin-dashboard' : 'dashboard')}
               className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
             >
               <ChevronRight className="h-4 w-4 mr-1 rotate-180" />
               Back to {userRole === 'admin' ? 'Admin Dashboard' : 'Dashboard'}
             </button>
-            <button 
+            <button
               onClick={() => setView('hero')}
               className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
             >

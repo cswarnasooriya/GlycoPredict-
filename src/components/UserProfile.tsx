@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { User, Mail, Calendar, Activity, Edit2, X, Loader2, Save, ShieldCheck, CheckCircle } from 'lucide-react';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { auth, db } from '../utils/firebase';
 
 interface UserProfileData {
   name: string;
@@ -108,13 +108,13 @@ export default function UserProfile() {
       </AnimatePresence>
 
       {/* Profile Header */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-white/80 backdrop-blur-md rounded-3xl shadow-xl border border-blue-100 p-8 relative overflow-hidden"
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
-        
+
         <div className="flex flex-col sm:flex-row items-center gap-6 relative z-10">
           <div className="h-24 w-24 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg border-4 border-white">
             {profile.name?.charAt(0) || profile.email?.charAt(0).toUpperCase()}
@@ -131,7 +131,7 @@ export default function UserProfile() {
               </span>
             </div>
           </div>
-          
+
           {!isEditing ? (
             <button
               onClick={() => setIsEditing(true)}
@@ -166,7 +166,7 @@ export default function UserProfile() {
       {/* Personal Information Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Account Details */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
@@ -182,10 +182,10 @@ export default function UserProfile() {
                 <User className="h-4 w-4" /> Full Name
               </p>
               {isEditing ? (
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={editForm.name}
-                  onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                   className="w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border cursor-text transition-all"
                   placeholder="Enter your full name"
                 />
@@ -216,7 +216,7 @@ export default function UserProfile() {
         </motion.div>
 
         {/* Health Baseline */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
@@ -232,10 +232,10 @@ export default function UserProfile() {
                 <Calendar className="h-4 w-4" /> Age
               </p>
               {isEditing ? (
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   value={editForm.age}
-                  onChange={(e) => setEditForm({...editForm, age: e.target.value})}
+                  onChange={(e) => setEditForm({ ...editForm, age: e.target.value })}
                   className="w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border cursor-text transition-all"
                   placeholder="Enter your age"
                 />
@@ -248,9 +248,9 @@ export default function UserProfile() {
                 <User className="h-4 w-4" /> Gender
               </p>
               {isEditing ? (
-                <select 
+                <select
                   value={editForm.gender}
-                  onChange={(e) => setEditForm({...editForm, gender: e.target.value})}
+                  onChange={(e) => setEditForm({ ...editForm, gender: e.target.value })}
                   className="w-full rounded-xl border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border cursor-pointer transition-all"
                 >
                   <option value="Male">Male</option>
@@ -261,7 +261,7 @@ export default function UserProfile() {
                 <p className="text-lg font-semibold text-slate-800">{profile.gender || 'Not set'}</p>
               )}
             </motion.div>
-            
+
             <motion.div layout className="p-4 bg-blue-50 rounded-xl border border-blue-100 mt-4">
               <p className="text-sm text-blue-800">
                 This baseline information helps our AI provide more accurate and personalized health insights during your assessments.

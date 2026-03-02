@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  LayoutDashboard, History, User as UserIcon, LogOut, Plus, Activity, 
+import {
+  LayoutDashboard, History, User as UserIcon, LogOut, Plus, Activity,
   ChevronRight, Loader2, Edit2, Save, X, Droplets, Scale, ArrowLeft, CheckCircle
 } from 'lucide-react';
 import { collection, query, where, orderBy, onSnapshot, doc, updateDoc, limit } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { auth, db } from '../utils/firebase';
 import { PatientRecord } from '../services/patientService';
 import ChatBot from './ChatBot';
 import MedicalHistoryTimeline from './MedicalHistoryTimeline';
@@ -22,7 +22,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
   const [latestRecord, setLatestRecord] = useState<(PatientRecord & { id: string }) | null>(null);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  
+
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editForm, setEditForm] = useState({ name: '', age: '', gender: 'Male' });
   const [savingProfile, setSavingProfile] = useState(false);
@@ -46,7 +46,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
     });
 
     const recordsRef = collection(db, 'records');
-    
+
     // Fetch all records for history
     const qAll = query(recordsRef, where('userId', '==', auth.currentUser.uid), orderBy('createdAt', 'desc'));
     const unsubscribeRecords = onSnapshot(qAll, (snapshot) => {
@@ -115,7 +115,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
   const getMetricStatus = (type: 'hba1c' | 'glucose' | 'bmi', value: number | string) => {
     const val = parseFloat(value as string);
     if (isNaN(val)) return { label: 'Unknown', color: 'bg-slate-100 text-slate-800' };
-    
+
     if (type === 'hba1c') {
       if (val < 5.7) return { label: 'Normal', color: 'bg-blue-100 text-blue-800 border-blue-200' };
       if (val <= 6.4) return { label: 'Borderline', color: 'bg-amber-100 text-amber-800 border-amber-200' };
@@ -160,26 +160,24 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
             GlycoPredict
           </div>
         </div>
-        
+
         <nav className="flex-1 p-4 space-y-2">
-          <button 
+          <button
             onClick={() => setActiveTab('dashboard')}
-            className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl font-medium transition-colors cursor-pointer ${
-              activeTab === 'dashboard' 
-                ? 'bg-blue-50 text-blue-700' 
+            className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl font-medium transition-colors cursor-pointer ${activeTab === 'dashboard'
+                ? 'bg-blue-50 text-blue-700'
                 : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-            }`}
+              }`}
           >
             <LayoutDashboard className="h-5 w-5" />
             Dashboard
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('history')}
-            className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl font-medium transition-colors cursor-pointer ${
-              activeTab === 'history' 
-                ? 'bg-blue-50 text-blue-700' 
+            className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl font-medium transition-colors cursor-pointer ${activeTab === 'history'
+                ? 'bg-blue-50 text-blue-700'
                 : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-            }`}
+              }`}
           >
             <History className="h-5 w-5" />
             History
@@ -187,14 +185,14 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
         </nav>
 
         <div className="p-4 border-t border-slate-100 space-y-2">
-          <button 
+          <button
             onClick={onBackToHome}
             className="flex items-center gap-3 px-4 py-3 w-full text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-5 w-5" />
             Back to Home
           </button>
-          <button 
+          <button
             onClick={onLogout}
             className="flex items-center gap-3 px-4 py-3 w-full text-slate-600 hover:bg-red-50 hover:text-red-600 rounded-xl font-medium transition-colors cursor-pointer"
           >
@@ -211,7 +209,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
           <div>
             <h1 className="text-xl font-bold text-slate-800 capitalize">{activeTab}</h1>
           </div>
-          <button 
+          <button
             onClick={onNewAssessment}
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl shadow-sm shadow-blue-600/20 transition-all cursor-pointer"
           >
@@ -228,7 +226,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
           ) : activeTab === 'dashboard' ? (
             <>
               {/* Welcome Banner */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden"
@@ -246,9 +244,9 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
 
               {/* Bento Grid Layout */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
+
                 {/* Latest Assessment Summary (Col Span 2) */}
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
@@ -263,7 +261,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
                     </div>
                     {latestRecord && (
                       <span className="text-sm font-medium text-slate-500">
-                        {latestRecord.createdAt && typeof (latestRecord.createdAt as any).toDate === 'function' 
+                        {latestRecord.createdAt && typeof (latestRecord.createdAt as any).toDate === 'function'
                           ? (latestRecord.createdAt as any).toDate().toLocaleDateString()
                           : 'Recent'}
                       </span>
@@ -274,7 +272,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
                     <div className="text-center py-10">
                       <Activity className="h-12 w-12 text-slate-300 mx-auto mb-4" />
                       <p className="text-slate-500 mb-4">No assessment records found.</p>
-                      <button 
+                      <button
                         onClick={onNewAssessment}
                         className="text-blue-600 font-medium hover:text-blue-700 cursor-pointer"
                       >
@@ -343,7 +341,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
                 </motion.div>
 
                 {/* Integrated Profile Section (Col Span 1) */}
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
@@ -357,7 +355,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
                       <h3 className="text-xl font-bold text-slate-800">Bio-Details</h3>
                     </div>
                     {!isEditingProfile ? (
-                      <button 
+                      <button
                         onClick={() => setIsEditingProfile(true)}
                         className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
                         title="Edit Bio"
@@ -365,7 +363,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
                         <Edit2 className="h-5 w-5" />
                       </button>
                     ) : (
-                      <button 
+                      <button
                         onClick={cancelEdit}
                         className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                         title="Cancel"
@@ -378,7 +376,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
                   <div className="flex-1 space-y-5">
                     <AnimatePresence mode="wait">
                       {!isEditingProfile ? (
-                        <motion.div 
+                        <motion.div
                           key="view"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
@@ -405,7 +403,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
                           </div>
                         </motion.div>
                       ) : (
-                        <motion.div 
+                        <motion.div
                           key="edit"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
@@ -414,28 +412,28 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
                         >
                           <div>
                             <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Full Name</label>
-                            <input 
-                              type="text" 
+                            <input
+                              type="text"
                               value={editForm.name}
-                              onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                              onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
                               className="w-full rounded-xl border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2.5 border cursor-text text-sm"
                             />
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Age</label>
-                              <input 
-                                type="number" 
+                              <input
+                                type="number"
                                 value={editForm.age}
-                                onChange={(e) => setEditForm({...editForm, age: e.target.value})}
+                                onChange={(e) => setEditForm({ ...editForm, age: e.target.value })}
                                 className="w-full rounded-xl border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2.5 border cursor-text text-sm"
                               />
                             </div>
                             <div>
                               <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Gender</label>
-                              <select 
+                              <select
                                 value={editForm.gender}
-                                onChange={(e) => setEditForm({...editForm, gender: e.target.value})}
+                                onChange={(e) => setEditForm({ ...editForm, gender: e.target.value })}
                                 className="w-full rounded-xl border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2.5 border cursor-pointer text-sm"
                               >
                                 <option value="Male">Male</option>
@@ -475,7 +473,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
                   <p className="text-slate-500 mb-6 max-w-md mx-auto">
                     Start your first assessment to see your health history!
                   </p>
-                  <button 
+                  <button
                     onClick={onNewAssessment}
                     className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-sm transition-all cursor-pointer"
                   >
@@ -490,7 +488,7 @@ export default function Dashboard({ onNewAssessment, onLogout, onBackToHome }: D
           )}
         </div>
       </main>
-      
+
       {/* Floating AI Health Assistant */}
       {records.length > 0 && <ChatBot latestRecord={records[0]} />}
     </div>

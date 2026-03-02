@@ -1,5 +1,5 @@
 import { collection, addDoc, query, where, getDocs, orderBy, Timestamp, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../utils/firebase';
 
 export interface PatientRecord {
   gender: string;
@@ -45,7 +45,7 @@ export const getAllPatientRecords = async () => {
     const recordsRef = collection(db, 'records');
     const q = query(recordsRef, orderBy('createdAt', 'desc'));
     const querySnapshot = await getDocs(q);
-    
+
     const records: (PatientRecord & { id: string, userId: string })[] = [];
     querySnapshot.forEach((doc) => {
       records.push({ id: doc.id, ...doc.data() } as PatientRecord & { id: string, userId: string });
@@ -88,14 +88,14 @@ export const getPatientHistory = async (userId: string) => {
       where('userId', '==', userId),
       orderBy('createdAt', 'desc')
     );
-    
+
     const querySnapshot = await getDocs(q);
     const records: (PatientRecord & { id: string })[] = [];
-    
+
     querySnapshot.forEach((doc) => {
       records.push({ id: doc.id, ...doc.data() } as PatientRecord & { id: string });
     });
-    
+
     return records;
   } catch (error) {
     console.error('Error fetching patient history:', error);

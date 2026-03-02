@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { LogOut, Users, Activity, FileText, Plus, Edit, Trash2, ArrowLeft, Loader2, TrendingUp, Calendar, BellRing, Stethoscope } from 'lucide-react';
 import { signOut } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth } from '../utils/firebase';
 import { getBlogs, createBlog, updateBlog, deleteBlog, BlogPost } from '../services/blogService';
 import AdminPatients from './AdminPatients';
 import AdminTrending from './AdminTrending';
@@ -104,44 +104,44 @@ export default function AdminDashboard({ onLogout, onBackToHome, initialTab = 'p
           </div>
           <span className="text-xl font-bold text-slate-800 tracking-tight">GlycoPredict</span>
         </div>
-        
+
         <nav className="flex-1 p-4 space-y-2">
-          <button 
+          <button
             onClick={() => setActiveTab('patients')}
             className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl font-medium transition-colors cursor-pointer ${activeTab === 'patients' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
           >
             <Users className="h-5 w-5" />
             Patient Records
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('assessment')}
             className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl font-medium transition-colors cursor-pointer ${activeTab === 'assessment' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
           >
             <Stethoscope className="h-5 w-5" />
             Health Assessment
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('blogs')}
             className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl font-medium transition-colors cursor-pointer ${activeTab === 'blogs' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
           >
             <FileText className="h-5 w-5" />
             Blog Manager
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('trending')}
             className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl font-medium transition-colors cursor-pointer ${activeTab === 'trending' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
           >
             <TrendingUp className="h-5 w-5" />
             Trending Topics
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('events')}
             className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl font-medium transition-colors cursor-pointer ${activeTab === 'events' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
           >
             <Calendar className="h-5 w-5" />
             Upcoming Events
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('notes')}
             className={`flex items-center gap-3 px-4 py-3 w-full rounded-xl font-medium transition-colors cursor-pointer ${activeTab === 'notes' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
           >
@@ -151,14 +151,14 @@ export default function AdminDashboard({ onLogout, onBackToHome, initialTab = 'p
         </nav>
 
         <div className="p-4 border-t border-slate-100 space-y-2">
-          <button 
+          <button
             onClick={onBackToHome}
             className="flex items-center gap-3 px-4 py-3 w-full text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-5 w-5" />
             Back to Home
           </button>
-          <button 
+          <button
             onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 w-full text-slate-600 hover:bg-red-50 hover:text-red-600 rounded-xl font-medium transition-colors cursor-pointer"
           >
@@ -176,7 +176,7 @@ export default function AdminDashboard({ onLogout, onBackToHome, initialTab = 'p
             <p className="text-sm text-slate-500">Manage patient records and system insights.</p>
           </div>
           {activeTab === 'blogs' && !isFormOpen && (
-            <button 
+            <button
               onClick={() => handleOpenForm()}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl shadow-sm shadow-indigo-600/20 transition-all cursor-pointer"
             >
@@ -203,12 +203,12 @@ export default function AdminDashboard({ onLogout, onBackToHome, initialTab = 'p
                 <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                   <div className="px-6 py-5 border-b border-slate-200 flex justify-between items-center">
                     <h3 className="text-lg font-bold text-slate-800">{editingBlog ? 'Edit Article' : 'Create New Article'}</h3>
-                        <button 
-                          onClick={handleCloseForm}
-                          className="text-slate-500 hover:text-slate-700 cursor-pointer"
-                        >
-                          Cancel
-                        </button>
+                    <button
+                      onClick={handleCloseForm}
+                      className="text-slate-500 hover:text-slate-700 cursor-pointer"
+                    >
+                      Cancel
+                    </button>
                   </div>
                   <form onSubmit={handleSubmit} className="p-6 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -296,10 +296,10 @@ export default function AdminDashboard({ onLogout, onBackToHome, initialTab = 'p
                         </thead>
                         <tbody className="text-sm">
                           {blogs.map((blog) => {
-                            const date = blog.createdAt && typeof (blog.createdAt as any).toDate === 'function' 
-                              ? (blog.createdAt as any).toDate().toLocaleDateString() 
+                            const date = blog.createdAt && typeof (blog.createdAt as any).toDate === 'function'
+                              ? (blog.createdAt as any).toDate().toLocaleDateString()
                               : 'Unknown';
-                              
+
                             return (
                               <tr key={blog.id} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors cursor-pointer">
                                 <td className="px-6 py-4">
@@ -322,14 +322,14 @@ export default function AdminDashboard({ onLogout, onBackToHome, initialTab = 'p
                                 <td className="px-6 py-4 text-slate-600">{date}</td>
                                 <td className="px-6 py-4 text-right">
                                   <div className="flex items-center justify-end gap-2">
-                                    <button 
+                                    <button
                                       onClick={() => handleOpenForm(blog)}
                                       className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
                                       title="Edit"
                                     >
                                       <Edit className="h-4 w-4" />
                                     </button>
-                                    <button 
+                                    <button
                                       onClick={() => blog.id && handleDelete(blog.id)}
                                       className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                                       title="Delete"
